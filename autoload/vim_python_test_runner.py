@@ -19,7 +19,7 @@ def get_command_to_run_the_current_app(current_dir):
     app_name = get_app_name(current_dir)
     env_name = get_env_name_if_exists(current_dir)
     flags = get_flags(current_dir)
-    command = "{0}{1}nose {2}{3}".format(path_to_manage, env_name, flags, app_name)
+    command = "docker-compose run --rm -e SQLITE=1 web ./manage.py nose {}{}".format(flags, app_name)
     write_test_command_to_cache_file(command)
     return (command)
 
