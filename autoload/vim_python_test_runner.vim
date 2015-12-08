@@ -33,19 +33,23 @@ def get_proper_command(desired_command, current_directory):
     }
     return FUNCTIONS[desired_command]()
 
-def run_desired_command_for_os(command_to_run):
-    if _platform == 'linux' or _platform == 'linux2':
-        vim.command(":!SQLITE=1 python {0} 2>&1 | tee /tmp/test_results.txt".format(command_to_run))
-    elif _platform == 'darwin':
-        vim.command(":!{} 2>&1 | tee /tmp/test_results.txt".format(command_to_run))
+def run_desired_command_for_os(command_to_run, base_path):
+#    if _platform == 'linux' or _platform == 'linux2':
+#        vim.command(":!SQLITE=1 python {0} 2>&1 | tee /tmp/test_results.txt".format(command_to_run))
+#    elif _platform == 'darwin':
+    if _platform == 'darwin':
+        vim.command(':!{} 2>&1 | sed "s*/web/*{}*" | tee /tmp/test_results.txt'.format(command_to_run, base_path))
+
 
 def main():
-    current_directory = os.sep.join([dir for dir in vim.current.buffer.name.split(os.sep) if dir])
+    file_name = vim.current.buffer.name
+    base_path = file_name[:file_name.find('src/aplaceforrover/')]
+    current_directory = os.sep.join([dir for dir in file_name.split(os.sep) if dir])
     try:
         command_to_run = get_proper_command(vim.eval("a:command_to_run"), current_directory)
     except Exception as e:
         print(e)
-    run_desired_command_for_os(command_to_run)
+    run_desired_command_for_os(command_to_run, base_path)
     vim.command('silent make! | cw')
 
 vim.command('wall')
