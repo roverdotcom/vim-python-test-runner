@@ -37,8 +37,7 @@ def run_desired_command_for_os(command_to_run, base_path):
 #    if _platform == 'linux' or _platform == 'linux2':
 #        vim.command(":!SQLITE=1 python {0} 2>&1 | tee /tmp/test_results.txt".format(command_to_run))
 #    elif _platform == 'darwin':
-    if _platform == 'darwin':
-        vim.command(':!{} 2>&1 | sed "s*/web/*{}*" | tee /tmp/test_results.txt'.format(command_to_run, base_path))
+    vim.command(':!{} 2>&1 | sed "s*/web/*{}*" | tee /tmp/test_results.txt'.format(command_to_run, base_path))
 
 
 def main():
